@@ -63,7 +63,9 @@ func main() {
 
 	res := 0
 	for i := range left {
+		// Part 1
 		//res += Abs(left[i] - right[i])
+
 		res += left[i] * FindN(left[i], right)
 	}
 
