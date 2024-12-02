@@ -19,7 +19,7 @@ languages = [
     "Lua",
     "Haskell",
     "Zig",
-    "Julia",
+    #"Julia",
     "R",
     "Elixir",
     "Clojure",
