@@ -64,7 +64,12 @@ open("input") do f
         
         lfn = p -> parse(Int64, p)
         y = map(lfn, x)
-        
+
+        # Part 1
+        #if checker(y)
+            #global safe += 1
+        #end
+
         if checker(y)
             global safe += 1
         else
