@@ -7,67 +7,11 @@ enum {
     FALSE = 0,
     TRUE = 1
 };
+void append(char** str, char* new_str);
+char* slice(char* str, int start, int end);
+char** split_str(char* str, char delim);
 
-void append(char** str, char* new_str) {
-    size_t len = strlen(*str);
-    size_t new_len = strlen(new_str);
-    char* new_str2 = realloc(*str, len + new_len + 1);
-    if (!new_str2) {
-        perror("Memory allocation error");
-        exit(EXIT_FAILURE);
-    }
-
-    *str = new_str2;
-    strcpy(*str + len, new_str);
-}
-
-char* slice(char* str, int start, int end) {
-    char* new_str = malloc(end - start + 1);
-    if (!new_str) {
-        perror("Memory allocation error");
-        exit(EXIT_FAILURE);
-    }
-
-    strncpy(new_str, str + start, end - start);
-    new_str[end - start] = '\0';
-
-    return new_str;
-}
-
-char** split_str(char* str, char delim) {
-    char** parts = malloc(2 * sizeof(char*));
-    if (!parts) {
-        perror("Memory allocation error");
-        exit(EXIT_FAILURE);
-    }
-
-    char* delim_pos = strchr(str, delim);
-    if (!delim_pos) {
-        perror("Delimiter not found");
-        exit(EXIT_FAILURE);
-    }
-
-    size_t part1_len = delim_pos - str;
-    size_t part2_len = strlen(str) - part1_len - 1;
-    parts[0] = malloc(part1_len + 1);
-    parts[1] = malloc(part2_len + 1);
-
-    if (!parts[0]) {
-        perror("Memory allocation error");
-        exit(EXIT_FAILURE);
-    }
-    if (!parts[1]) {
-        perror("Memory allocation error");
-        exit(EXIT_FAILURE);
-    }
-
-    strncpy(parts[0], str, part1_len);
-    parts[0][part1_len] = '\0';
-    strncpy(parts[1], delim_pos + 1, part2_len);
-    parts[1][part2_len] = '\0';
-
-    return parts;
-}
+const char* input_file = "input";
 
 int main(void) {
     long res = 0;
@@ -78,13 +22,14 @@ int main(void) {
     size_t read;
 
     regex_t mul_regex;
-    regex_t enabler_regex;
     regmatch_t mul_match[1];
-    regmatch_t enabler_match[1];
     int mul;
+
+    regex_t enabler_regex;
+    regmatch_t enabler_match[1];
     int enabler;
 
-    fp = fopen("input", "r");
+    fp = fopen(input_file, "r");
     if (fp == NULL) {
         perror("Error opening file");
         exit(EXIT_FAILURE);
@@ -206,4 +151,65 @@ int main(void) {
     free(line);
 
     return EXIT_SUCCESS;
+}
+
+void append(char** str, char* new_str) {
+    size_t len = strlen(*str);
+    size_t new_len = strlen(new_str);
+    char* new_str2 = realloc(*str, len + new_len + 1);
+    if (!new_str2) {
+        perror("Memory allocation error");
+        exit(EXIT_FAILURE);
+    }
+
+    *str = new_str2;
+    strcpy(*str + len, new_str);
+}
+
+char* slice(char* str, int start, int end) {
+    char* new_str = malloc(end - start + 1);
+    if (!new_str) {
+        perror("Memory allocation error");
+        exit(EXIT_FAILURE);
+    }
+
+    strncpy(new_str, str + start, end - start);
+    new_str[end - start] = '\0';
+
+    return new_str;
+}
+
+char** split_str(char* str, char delim) {
+    char** parts = malloc(2 * sizeof(char*));
+    if (!parts) {
+        perror("Memory allocation error");
+        exit(EXIT_FAILURE);
+    }
+
+    char* delim_pos = strchr(str, delim);
+    if (!delim_pos) {
+        perror("Delimiter not found");
+        exit(EXIT_FAILURE);
+    }
+
+    size_t part1_len = delim_pos - str;
+    size_t part2_len = strlen(str) - part1_len - 1;
+    parts[0] = malloc(part1_len + 1);
+    parts[1] = malloc(part2_len + 1);
+
+    if (!parts[0]) {
+        perror("Memory allocation error");
+        exit(EXIT_FAILURE);
+    }
+    if (!parts[1]) {
+        perror("Memory allocation error");
+        exit(EXIT_FAILURE);
+    }
+
+    strncpy(parts[0], str, part1_len);
+    parts[0][part1_len] = '\0';
+    strncpy(parts[1], delim_pos + 1, part2_len);
+    parts[1][part2_len] = '\0';
+
+    return parts;
 }
