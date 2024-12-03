@@ -1,5 +1,4 @@
 Java
-C
 C#
 JavaScript
 Ruby
@@ -20,3 +19,4 @@ Perl
 C++
 Erlang
 Objective-C
+Zig
