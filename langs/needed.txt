@@ -17,6 +17,5 @@ Perl
 Elixir
 Lua
 PHP
-R
 OCaml
 Python
