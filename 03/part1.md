@@ -58,7 +58,6 @@ int main(void) {
     }
 
     val = regcomp(&regex, "mul\\([0-9]+,[0-9]+\\)", REG_EXTENDED);
-    //enabler = regcomp(&enabler_regex, "do(n't)?\\(\\)", REG_EXTENDED);
     if (val != 0) {
         perror("Regex compilation failed.");
         exit(EXIT_FAILURE);

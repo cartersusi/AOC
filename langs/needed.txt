@@ -17,6 +17,6 @@ OCaml
 Python
 Perl
 C++
-Erlang
 Objective-C
 Zig
+Erlang

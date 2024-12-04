@@ -1,7 +1,10 @@
 import random
 import subprocess
 
-subprocess.run(["./zig-out/bin/christmas"])
+try:
+    subprocess.run(["./christmas_tree/zig-out/bin/christmas"])
+except FileNotFoundError:
+    print("Christmas binary not found. Please build it first.")
 
 neededfile = "langs/needed.txt"
 donefile = "langs/done.txt"
