@@ -23,7 +23,7 @@ typedef struct {
 regex NewRegex(char* _pattern);
 
 char* Empty();
-char* Slice(char* _str, int _start, int _end);
+char* Slice(char* _str, size_t _start, size_t _end);
 char** SplitString(char* _str, char _delim);
 char* Matching(regex* _r, char* _line);
 int Append(char** _str, char* _new_str);
@@ -57,8 +57,8 @@ int main(void) {
         match_count = 0;
 
         char* enabler_line = line;
-        int start_index = 0;
-        int current_index = 0;
+        size_t start_index = 0;
+        size_t current_index = 0;
         while (!regexec(&enabler_regex.regex, enabler_line, 1, enabler_regex.match, 0)) {
             char* match = Matching(&enabler_regex, enabler_line);
             NullError(match, "Memory allocation error");
@@ -76,7 +76,7 @@ int main(void) {
 
                 if (enabled != FALSE) {
                     enabled = FALSE;
-                    const int end_index = enabler_regex.match[0].rm_so + current_index;
+                    const size_t end_index = enabler_regex.match[0].rm_so + current_index;
                     
                     char* tmp = Slice(line, start_index, end_index);
                     NullError(tmp, "Memory allocation error");
@@ -97,7 +97,7 @@ int main(void) {
         }
 
         if (enabled == TRUE) {
-            const int end_index = strlen(line);
+            const size_t end_index = strlen(line);
 
             char* tmp = Slice(line, start_index, end_index);
             NullError(tmp, "Memory allocation error");
@@ -194,7 +194,7 @@ int Append(char** _str, char* _new_str) {
     return 0;
 }
 
-char* Slice(char* _str, int _start, int _end) {
+char* Slice(char* _str, size_t _start, size_t _end) {
     if (_end < _start) {
         perror("Invalid slice range: end < start");
         goto cleanup;
