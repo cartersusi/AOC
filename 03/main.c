@@ -27,6 +27,7 @@ char* Slice(char* _str, size_t _start, size_t _end);
 char** SplitString(char* _str, char _delim);
 char* Matching(regex* _r, char* _line);
 int Append(char** _str, char* _new_str);
+static void MainCleanup(FILE *fp, char *line, regex mul_regex, regex enabler_regex, char **matches, size_t match_count);
 
 int main(void) {
     unsigned long long res = 0;
@@ -148,19 +149,19 @@ int main(void) {
     }
     printf("Result: %llu\n", res);
     
-    if (fp) fclose(fp);
-    if (line) free(line);
-    if (mul_regex.compiled == 0) regfree(&mul_regex.regex);
-    if (enabler_regex.compiled == 0) regfree(&enabler_regex.regex);
-    if (matches) FreeArr(matches, match_count);
+    MainCleanup(fp, line, mul_regex, enabler_regex, matches, match_count);
     return EXIT_SUCCESS;
 cleanup:
+    MainCleanup(fp, line, mul_regex, enabler_regex, matches, match_count);
+    return EXIT_FAILURE;
+}
+
+static void MainCleanup(FILE *fp, char *line, regex mul_regex, regex enabler_regex, char **matches, size_t match_count) {
     if (fp) fclose(fp);
     if (line) free(line);
     if (mul_regex.compiled == 0) regfree(&mul_regex.regex);
     if (enabler_regex.compiled == 0) regfree(&enabler_regex.regex);
     if (matches) FreeArr(matches, match_count);
-    return EXIT_FAILURE;
 }
 
 regex NewRegex(char* _pattern) {
