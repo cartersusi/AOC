@@ -3,10 +3,8 @@ C#
 JavaScript
 Ruby
 Swift
-Rust
 TypeScript
 Haskell
-Clojure
 Julia
 Lisp
 C++
@@ -19,3 +17,4 @@ Lua
 PHP
 OCaml
 Python
+Clojure

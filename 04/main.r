@@ -24,7 +24,6 @@ directions <- matrix(
   ncol = 2, byrow = TRUE
 )
 
-
 valid_direction <- function(dx, dy, x, y) {
   x_end <- x + (dx * lx)
   y_end <- y + (dy * lx)
@@ -35,7 +34,6 @@ valid_direction <- function(dx, dy, x, y) {
     x_end <= n && y_end <= m
   )
 }
-
 
 valid_directions <- function(x, y) {
   dir_valid <- apply(directions, 1, function(dir) {
