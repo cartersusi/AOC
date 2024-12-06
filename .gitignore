@@ -4,3 +4,15 @@ zig-out
 main
 christmas_tree/
 target/
+.vscode/
+settings.json
+
+# Generated swift files
+.DS_Store
+.build/
+Packages/
+xcuserdata/
+DerivedData/
+.swiftpm/configuration/registries.json
+.swiftpm/xcode/package.xcworkspace/contents.xcworkspacedata
+.netrc

@@ -1,21 +1,8 @@
-function ordered(x)
-    inc = false
+function ordered(x::Array{Int64, 1})
+    inc::Bool = x[2] > x[1]
     
-    for i in eachindex(x)
-        if i == 1 # Last time using julia
-            continue
-        end
-        
-        l = x[i-1]
-        r = x[i]
-        d = (l - r)
-
-        if i == 2
-            inc = (d > 0)
-            continue
-        end
-
-        if inc != (d > 0)
+    for i in 3:length(x)
+        if inc != ((x[i] - x[i-1]) > 0)
             return false
         end
     end
@@ -23,30 +10,20 @@ function ordered(x)
     return true
 end
 
-function ranged(x, low, high)
-    for i in eachindex(x)
-        if i == 1
-            continue
-        end
-
-        l = x[i-1]
-        r = x[i]
-        d = (l - r)
-        if d < 0
-            d = -d
-        end
+function inrange(x::Array{Int64, 1}, low::Int64, high::Int64)
+    for i in 2:length(x)
+        d = abs(x[i-1] - x[i])
 
         if (d < low) || (d > high)
             return false
         end
-        
     end
 
     return true
 end
 
 function checker(y)
-    if ranged(y, 1, 3) && ordered(y)
+    if inrange(y, 1, 3) && ordered(y)
         return true
     end
 
@@ -54,16 +31,16 @@ function checker(y)
 end
 
 
-safe = 0
+safe::Int64 = 0
 open("input") do f
-    line = 0
+    n::Int64 = 0
 
     while ! eof(f)
-        sc = readline(f)
-        x = split(sc)
+        sc::String = readline(f)
+        x::Array{String, 1} = split(sc)
         
         lfn = p -> parse(Int64, p)
-        y = map(lfn, x)
+        y::Array{Int64, 1} = map(lfn, x)
 
         # Part 1
         #if checker(y)
@@ -72,17 +49,19 @@ open("input") do f
 
         if checker(y)
             global safe += 1
-        else
-            for i in eachindex(y)
-                tmp = [y[1:i-1]; y[i+1:end]]
-                if checker(tmp)
-                    global safe += 1
-                    break
-                end
+            n += 1
+            continue
+        end
+        
+        for i in eachindex(y)
+            tmp::Array{Int64, 1} = [y[1:i-1]; y[i+1:end]]
+            if checker(tmp)
+                global safe += 1
+                break
             end
         end
         
-        line += 1
+        n += 1
     end
 end
 println(safe)
