@@ -15,7 +15,7 @@ struct Lab {
     let shape: (m: Int, n: Int);
     var _guard: (row: Int, col: Int, direction: Directions);
 
-    mutating func FindGuard()  {
+    mutating func FindGuard() -> Void {
         for i in 0...shape.m {
             for j in 0...shape.n {
                 if layout[i][j] == "^" {
@@ -26,7 +26,7 @@ struct Lab {
                 }
             }
         }
-        
+
         print("Guard not found");
     }
 
@@ -56,19 +56,19 @@ struct Lab {
         return false;
     }
 
-    mutating func ChangeDirection() {
+    mutating func ChangeDirection() -> Void {
         _guard.direction = Directions(rawValue: (_guard.direction.rawValue + 1) % Directions.SizeDirections.rawValue) ?? .up; // wtf
     }
 
-    mutating func MarkVisited(){
+    mutating func MarkVisited() -> Void {
         layout[_guard.row][_guard.col] = "X";
     }
 
-    mutating func MarkGuard(){
+    mutating func MarkGuard() -> Void {
         layout[_guard.row][_guard.col] = "^";
     }
 
-    mutating func Move() {
+    mutating func Move() -> Void {
         MarkVisited();
         
         switch _guard.direction {
@@ -104,7 +104,7 @@ struct Lab {
         }
     }
 
-    func DisplayLab() {
+    func DisplayLab() -> Void {
         for i in 0...shape.m {
             for j in 0...shape.n {
                 print(layout[i][j], terminator: " ");
@@ -117,7 +117,7 @@ struct Lab {
         return layout.flatMap{$0}.filter{$0 == "X"}.count
     }
 
-    mutating func GetOut() {
+    mutating func GetOut() -> Void {
         var out: Bool = false;
         var LIMIT: Int = 0;
 
