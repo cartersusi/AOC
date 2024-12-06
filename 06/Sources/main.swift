@@ -2,7 +2,7 @@ import Foundation
 
 let InputFile: String = "Data/input";
 let InputRaw: String = try String(contentsOfFile: InputFile, encoding: .utf8);
-func size(x: Int) -> Int {
+func sqsize(x: Int) -> Int {
     return Int((-1 + sqrt(Double(1 + 4 * x))) / 2);
 };
 
@@ -12,12 +12,12 @@ enum Directions: Int {
 
 struct Lab {
     var layout: [[Character]];
-    let oub: (m: Int, n: Int);
+    let shape: (m: Int, n: Int);
     var _guard: (row: Int, col: Int, direction: Directions);
 
     mutating func FindGuard()  {
-        for i in 0...oub.m {
-            for j in 0...oub.n {
+        for i in 0...shape.m {
+            for j in 0...shape.n {
                 if layout[i][j] == "^" {
                     _guard.row = i;
                     _guard.col = j;
@@ -33,19 +33,19 @@ struct Lab {
     func ValidPosition() -> Bool {
         switch _guard.direction {
         case .left:
-            if _guard.col - 1 <= oub.n && _guard.col - 1 >= 0 {
+            if _guard.col - 1 <= shape.n && _guard.col - 1 >= 0 {
                 return(layout[_guard.row][_guard.col - 1] != "#");
             }
         case .right:
-            if _guard.col + 1 <= oub.n && _guard.col + 1 >= 0 {
+            if _guard.col + 1 <= shape.n && _guard.col + 1 >= 0 {
                 return(layout[_guard.row][_guard.col + 1] != "#");
             }
         case .down:
-            if _guard.row + 1 <= oub.m && _guard.row + 1 >= 0 {
+            if _guard.row + 1 <= shape.m && _guard.row + 1 >= 0 {
                 return(layout[_guard.row + 1][_guard.col] != "#");
             }
         case .up:
-            if _guard.row - 1 <= oub.m && _guard.row - 1 >= 0 {
+            if _guard.row - 1 <= shape.m && _guard.row - 1 >= 0 {
                 return(layout[_guard.row - 1][_guard.col] != "#");
             }
         default:
@@ -93,9 +93,9 @@ struct Lab {
         case .up:
             return(_guard.row == 0);
         case .right:
-            return(_guard.col == oub.n);
+            return(_guard.col == shape.n);
         case .down:
-            return(_guard.row == oub.m);
+            return(_guard.row == shape.m);
         case .left:
             return(_guard.col == 0);
         default:
@@ -105,8 +105,8 @@ struct Lab {
     }
 
     func DisplayLab() {
-        for i in 0...oub.m {
-            for j in 0...oub.n {
+        for i in 0...shape.m {
+            for j in 0...shape.n {
                 print(layout[i][j], terminator: " ");
             }
             print();
@@ -121,14 +121,14 @@ struct Lab {
         var out: Bool = false;
         var LIMIT: Int = 0;
 
-        while(!out && (LIMIT < ((oub.m * oub.n) + oub.n))) {
-            out = FoundExit();
+        while(!out && (LIMIT < ((shape.m * shape.n) + shape.n))) {
             if ValidPosition() {
                 Move();
             } else {
                 ChangeDirection();
             }
 
+            out = FoundExit();
             LIMIT += 1;
         }
     }
@@ -137,7 +137,7 @@ struct Lab {
 
 var lab = Lab(
     layout: InputRaw.split(separator: "\n").map { Array($0) }, 
-    oub: (m: size(x: InputRaw.count+1) - 1, n: size(x: InputRaw.count+1) - 1),
+    shape: (m: sqsize(x: InputRaw.count+1) - 1, n: sqsize(x: InputRaw.count+1) - 1), // +1 for \n
     _guard: (row: 0, col: 0, direction: .up)
 )
 lab.FindGuard()
