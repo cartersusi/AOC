@@ -13,7 +13,7 @@ enum Directions: Int {
 struct Lab {
     var layout: [[Character]];
     let shape: (m: Int, n: Int);
-    var _guard: (row: Int, col: Int, direction: Directions);
+    var _guard: (row: Int, col: Int, direction: Directions, has_escaped: Bool);
 
     mutating func FindGuard() -> Void {
         for i in 0...shape.m {
@@ -21,7 +21,7 @@ struct Lab {
                 if layout[i][j] == "^" {
                     _guard.row = i;
                     _guard.col = j;
-                    print("Guard found at: \(i), \(j)");
+                    //print("Guard found at: \(i), \(j)");
                     return
                 }
             }
@@ -118,29 +118,53 @@ struct Lab {
     }
 
     mutating func GetOut() -> Void {
-        var out: Bool = false;
         var LIMIT: Int = 0;
 
-        while(!out && (LIMIT < ((shape.m * shape.n) + shape.n))) {
+        while(!_guard.has_escaped && (LIMIT < ((shape.m * shape.n) + shape.n))) {
             if ValidPosition() {
                 Move();
             } else {
                 ChangeDirection();
             }
 
-            out = FoundExit();
+            _guard.has_escaped = FoundExit();
             LIMIT += 1;
         }
     }
 }
 
-
+let M: Int = sqsize(x: InputRaw.count+1) - 1
+/* Part 1 
 var lab = Lab(
     layout: InputRaw.split(separator: "\n").map { Array($0) }, 
-    shape: (m: sqsize(x: InputRaw.count+1) - 1, n: sqsize(x: InputRaw.count+1) - 1), // +1 for \n
-    _guard: (row: 0, col: 0, direction: .up)
+    shape: (m: M, n: M),
+    _guard: (row: 0, col: 0, direction: .up, has_escaped: false)
 )
 lab.FindGuard()
 lab.GetOut()
-//lab.DisplayLab()
-print(lab.CountVisited() + 1) // +1 for guard loc
+print("The guard visited \(lab.CountVisited() + 1) positions")
+*/
+
+/* Part 2 */
+// Not proud of this
+var part2: Int = 0
+for i in 0...M {
+    for j in 0...M {
+        var lab = Lab(
+            layout: InputRaw.split(separator: "\n").map { Array($0) }, 
+            shape: (m: M, n: M),
+            _guard: (row: 0, col: 0, direction: .up, has_escaped: false)
+        )
+        lab.layout[i][j] = "#"
+        lab.FindGuard()
+        //if lab._guard.col == 0 && lab._guard.col == 0 {
+        //    continue
+        //}
+        lab.GetOut()
+        if !lab._guard.has_escaped {
+            part2 += 1
+        }
+    }
+}
+
+print("\(part2) Guards did not escape")
