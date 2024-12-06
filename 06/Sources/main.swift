@@ -81,6 +81,7 @@ struct Lab {
         case .up:
             _guard.row -= 1;
         default:
+            print("Invalid direction");
             break;
         }
 
