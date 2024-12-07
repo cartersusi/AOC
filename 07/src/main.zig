@@ -4,9 +4,6 @@ const input_file = "data/input";
 
 // Part 1 const OP = enum(i3) { ADD = 0, MUL = 1, SIZE = 2 };
 const OP = enum(i3) { ADD = 0, MUL = 1, CONCAT = 2, SIZE = 3 };
-fn Op(x: OP) i3 {
-    return @intFromEnum(x);
-}
 
 fn Pow(b: usize, e: usize) usize {
     var x: usize = 1;
