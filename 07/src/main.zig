@@ -16,7 +16,7 @@ fn Pow(b: usize, e: usize) usize {
     return x;
 }
 
-fn Concat(l: i164, r: i164) i164 {
+fn Concat(l: i128, r: i128) i128 {
     return l * Pow(10, std.math.log10(@as(usize, @intCast(r))) + 1) + r;
 }
 
@@ -40,7 +40,7 @@ fn Combinations(allocator: *std.mem.Allocator, nops: usize, nunique: usize) !str
 }
 
 pub fn main() !void {
-    var res: i164 = 0;
+    var res: i128 = 0;
 
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
     defer _ = gpa.deinit();
@@ -55,13 +55,13 @@ pub fn main() !void {
     while (try in_stream.readUntilDelimiterOrEof(&buf, '\n')) |line| {
         var sl = std.mem.split(u8, line, ":");
 
-        var k: i164 = 0;
+        var k: i128 = 0;
         var p: usize = 0;
-        var v = std.ArrayList(i164).init(allocator);
+        var v = std.ArrayList(i128).init(allocator);
         defer v.deinit();
 
         if (sl.next()) |x| {
-            k = try std.fmt.parseInt(i164, x, 10);
+            k = try std.fmt.parseInt(i128, x, 10);
         }
 
         if (sl.next()) |x| {
@@ -70,7 +70,7 @@ pub fn main() !void {
                 if (num.len == 0) {
                     continue;
                 }
-                const pnum = try std.fmt.parseInt(i164, num, 10);
+                const pnum = try std.fmt.parseInt(i128, num, 10);
                 try v.append(pnum);
 
                 p += 1;
@@ -85,7 +85,7 @@ pub fn main() !void {
         defer allocator.free(c.combos);
 
         for (c.combos) |combo| {
-            var x: i164 = v.items[0];
+            var x: i128 = v.items[0];
 
             var xi: usize = 1;
             for (0..combo.len) |i| {
