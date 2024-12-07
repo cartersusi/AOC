@@ -4,3 +4,4 @@ C
 R
 Rust
 Swift
+Zig
