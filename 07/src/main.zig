@@ -2,6 +2,12 @@ const std = @import("std");
 
 const input_file = "data/input";
 
+// Part 1 const OP = enum(i3) { ADD = 0, MUL = 1, SIZE = 2 };
+const OP = enum(i3) { ADD = 0, MUL = 1, CONCAT = 2, SIZE = 3 };
+fn Op(x: OP) i3 {
+    return @intFromEnum(x);
+}
+
 fn Pow(b: usize, e: usize) usize {
     var x: usize = 1;
     for (0..e) |_| {
@@ -10,27 +16,23 @@ fn Pow(b: usize, e: usize) usize {
     return x;
 }
 
-fn Concat(l: i128, r: i128) i128 {
+fn Concat(l: i164, r: i164) i164 {
     return l * Pow(10, std.math.log10(@as(usize, @intCast(r))) + 1) + r;
 }
 
-fn Combinations(allocator: *std.mem.Allocator, nops: usize, nunique: usize, npossible: usize) !struct {
+fn Combinations(allocator: *std.mem.Allocator, nops: usize, nunique: usize) !struct {
     combos: [][]i3,
     combos_m: []i3,
 } {
     var combos_m = try allocator.alloc(i3, nunique * nops);
     var combos = try allocator.alloc([]i3, nunique);
 
-    // 0 = add
-    // 1 = mul
-    // 2 = concat
-
     for (0..nunique) |i| {
         combos[i] = combos_m[i * nops .. i * nops + nops];
         var x = i;
         for (0..nops) |j| {
-            combos_m[i * nops + j] = @intCast(x % npossible);
-            x /= npossible;
+            combos_m[i * nops + j] = @intCast(x % @as(usize, @intCast(@intFromEnum(OP.SIZE))));
+            x /= @as(usize, @intCast(@intFromEnum(OP.SIZE)));
         }
     }
 
@@ -38,7 +40,7 @@ fn Combinations(allocator: *std.mem.Allocator, nops: usize, nunique: usize, npos
 }
 
 pub fn main() !void {
-    var res: i128 = 0;
+    var res: i164 = 0;
 
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
     defer _ = gpa.deinit();
@@ -53,13 +55,13 @@ pub fn main() !void {
     while (try in_stream.readUntilDelimiterOrEof(&buf, '\n')) |line| {
         var sl = std.mem.split(u8, line, ":");
 
-        var k: i128 = 0;
+        var k: i164 = 0;
         var p: usize = 0;
-        var v = std.ArrayList(i128).init(allocator);
+        var v = std.ArrayList(i164).init(allocator);
         defer v.deinit();
 
         if (sl.next()) |x| {
-            k = try std.fmt.parseInt(i128, x, 10);
+            k = try std.fmt.parseInt(i164, x, 10);
         }
 
         if (sl.next()) |x| {
@@ -68,7 +70,7 @@ pub fn main() !void {
                 if (num.len == 0) {
                     continue;
                 }
-                const pnum = try std.fmt.parseInt(i128, num, 10);
+                const pnum = try std.fmt.parseInt(i164, num, 10);
                 try v.append(pnum);
 
                 p += 1;
@@ -76,25 +78,20 @@ pub fn main() !void {
         }
         p -= 1;
 
-        // Part 1
-        //const nunique = Pow(2, p);
-        //const c = try Combinations(&allocator, p, nunique, 2);
-
-        // Part 2
-        const nunique = Pow(3, p);
-        const c = try Combinations(&allocator, p, nunique, 3);
-
+        const nunique = Pow(@as(usize, @intCast(@intFromEnum(OP.SIZE))), p);
+        const c = try Combinations(&allocator, p, nunique);
+        // Part 1 const c = try Combinations(&allocator, p, nunique);
         defer allocator.free(c.combos_m);
         defer allocator.free(c.combos);
 
         for (c.combos) |combo| {
-            var x: i128 = v.items[0];
+            var x: i164 = v.items[0];
 
             var xi: usize = 1;
             for (0..combo.len) |i| {
-                if (combo[i] == 0) {
+                if (combo[i] == @intFromEnum(OP.ADD)) {
                     x += v.items[xi];
-                } else if (combo[i] == 1) {
+                } else if (combo[i] == @intFromEnum(OP.MUL)) {
                     x *= v.items[xi];
                 } else {
                     x = Concat(x, v.items[xi]);
