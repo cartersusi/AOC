@@ -14,7 +14,7 @@ fn Concat(l: i128, r: i128) i128 {
     return l * Pow(10, std.math.log10(@as(usize, @intCast(r))) + 1) + r;
 }
 
-fn Combinations(allocator: *std.mem.Allocator, nops: usize, nunique: usize) !struct {
+fn Combinations(allocator: *std.mem.Allocator, nops: usize, nunique: usize, npossible: usize) !struct {
     combos: [][]i3,
     combos_m: []i3,
 } {
@@ -29,22 +29,10 @@ fn Combinations(allocator: *std.mem.Allocator, nops: usize, nunique: usize) !str
         combos[i] = combos_m[i * nops .. i * nops + nops];
         var x = i;
         for (0..nops) |j| {
-            combos_m[i * nops + j] = @intCast(x % 3);
-            x /= 3;
+            combos_m[i * nops + j] = @intCast(x % npossible);
+            x /= npossible;
         }
     }
-
-    // 0 = add
-    // 1 = mul
-
-    //for (0..nunique) |i| {
-    //    combos[i] = combos_m[i * nops .. i * nops + nops];
-    //    var x = i;
-    //    for (0..nops) |j| {
-    //        combos_m[i * nops + j] = @intCast(x & 1);
-    //        x >>= 1;
-    //    }
-    //}
 
     return .{ .combos = combos, .combos_m = combos_m };
 }
@@ -88,9 +76,14 @@ pub fn main() !void {
         }
         p -= 1;
 
+        // Part 1
         //const nunique = Pow(2, p);
+        //const c = try Combinations(&allocator, p, nunique, 2);
+
+        // Part 2
         const nunique = Pow(3, p);
-        const c = try Combinations(&allocator, p, nunique);
+        const c = try Combinations(&allocator, p, nunique, 3);
+
         defer allocator.free(c.combos_m);
         defer allocator.free(c.combos);
 
@@ -100,19 +93,15 @@ pub fn main() !void {
             var xi: usize = 1;
             for (0..combo.len) |i| {
                 if (combo[i] == 0) {
-                    //std.debug.print("{d} + {d} = {d}\n", .{ x, v.items[xi], x + v.items[xi] });
                     x += v.items[xi];
                 } else if (combo[i] == 1) {
-                    //std.debug.print("{d} * {d} = {d}\n", .{ x, v.items[xi], x * v.items[xi] });
                     x *= v.items[xi];
                 } else {
-                    //std.debug.print("{d} || {d} = {d}\n", .{ x, v.items[xi], Concat(x, v.items[xi]) });
                     x = Concat(x, v.items[xi]);
                 }
 
                 xi += 1;
             }
-            //std.debug.print("\n", .{});
 
             if (x == k) {
                 res += k;

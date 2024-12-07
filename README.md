@@ -1,8 +1,9 @@
 
 ## Ranking 
 1. Go
-2. Julia
-3. Swift
-4. Rust
+2. Swift
+3. Zig
+4. Julia
 5. C
-6. R
+6. Rust
+7. R

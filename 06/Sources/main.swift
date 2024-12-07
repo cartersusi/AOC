@@ -146,7 +146,7 @@ print("The guard visited \(lab.CountVisited() + 1) positions")
 */
 
 /* Part 2 */
-// Not proud of this
+// Not proud
 var part2: Int = 0
 for i in 0...M {
     for j in 0...M {
@@ -155,11 +155,10 @@ for i in 0...M {
             shape: (m: M, n: M),
             _guard: (row: 0, col: 0, direction: .up, has_escaped: false)
         )
+
         lab.layout[i][j] = "#"
         lab.FindGuard()
-        //if lab._guard.col == 0 && lab._guard.col == 0 {
-        //    continue
-        //}
+        
         lab.GetOut()
         if !lab._guard.has_escaped {
             part2 += 1

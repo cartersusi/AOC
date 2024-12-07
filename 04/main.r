@@ -12,14 +12,14 @@ size_check <- function(mn, m, n) mn == m * n
 stopifnot(size_check(length(data), m, n))
 
 directions <- matrix(
-  c(1, 0,   # Horizontal
-    0, 1,   # Vertical
-    1, -1,  # Diagonal 45°
-    1, 1,   # Diagonal 135°
-    -1, 1,  # Diagonal 225°
-    -1, -1, # Diagonal 315°
-    -1, 0,  # Horizontal Backwards
-    0, -1   # Vertical Backwards
+  c(1, 0,   # Hor
+    0, 1,   # Vert
+    1, -1,  # D 45°
+    1, 1,   # D 135°
+    -1, 1,  # D 225°
+    -1, -1, # D 315°
+    -1, 0,  # Hor Back
+    0, -1   # Vert Back
   ),
   ncol = 2, byrow = TRUE
 )
