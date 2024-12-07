@@ -10,7 +10,7 @@ fn Pow(b: usize, e: usize) usize {
     return x;
 }
 
-fn GenerateCombinations(allocator: *std.mem.Allocator, nops: usize, nunique: usize) !struct {
+fn Combinations(allocator: *std.mem.Allocator, nops: usize, nunique: usize) !struct {
     combos: [][]i2,
     combos_m: []i2,
 } {
@@ -68,7 +68,7 @@ pub fn main() !void {
         }
         p -= 1;
 
-        const c = try GenerateCombinations(&allocator, p, Pow(2, p));
+        const c = try Combinations(&allocator, p, Pow(2, p));
         defer allocator.free(c.combos_m);
         defer allocator.free(c.combos);
 
