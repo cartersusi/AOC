@@ -28,6 +28,25 @@ function PrintTable(x, head)
     end
 end
 
+function NearestNeighbor(q, x)
+    local min = math.huge
+    local res = nil
+
+    for _, v in x do
+        if v == q then goto continue end
+        local dx = q[1] - v[1]
+        local dy = q[2] - v[2]
+        local d = dx*dx + dy*dy
+        if d < min then
+            min = d
+            res = v
+        end
+        ::continue::
+    end
+
+    return res
+end
+
 assert(fname ~= nil, "No input file specified")
 print("Using input file: " .. fname)
 
