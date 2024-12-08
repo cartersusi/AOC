@@ -6,8 +6,6 @@ local inputfiles = {
 }
 local args = {...}
 local fname = inputfiles[args[1]+1]
-assert(fname ~= nil, "No input file specified")
-print("Using input file: " .. fname)
 
 function FileExists(file)
     local f = io.open(file, "rb")
@@ -29,6 +27,9 @@ function PrintTable(x, head)
         print(x[i])
     end
 end
+
+assert(fname ~= nil, "No input file specified")
+print("Using input file: " .. fname)
 
 assert(FileExists(fname))
 local x = ReadFile(fname)
