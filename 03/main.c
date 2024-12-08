@@ -11,7 +11,7 @@ enum {
     FALSE = 0,
     TRUE = 1
 };
-const char* input_file = "input";
+const char* input_file = "data/input";
 const char* enable = "do()";
 const char* disable = "don't()";
 

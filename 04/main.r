@@ -1,5 +1,5 @@
 res <- 0
-input_file <- "input"
+input_file <- "data/input"
 xmas <- "XMAS"
 target <- strsplit(xmas, NULL)[[1]]
 len_xmas <- length(target)

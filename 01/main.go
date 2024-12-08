@@ -9,6 +9,8 @@ import (
 	"strings"
 )
 
+const fpath = "data/input"
+
 func Abs(a int) int {
 	if a < 0 {
 		return -a
@@ -31,7 +33,6 @@ func FindN(a int, arr []int) int {
 }
 
 func main() {
-	fpath := "input"
 
 	file, err := os.Open(fpath)
 	if err != nil {

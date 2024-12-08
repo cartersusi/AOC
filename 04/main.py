@@ -12,7 +12,7 @@ def printMatrix(matrix):
     for row in matrix:
         print(' '.join(row))
 
-file_path = 'input'
+file_path = 'data/input'
 matrix = readFileToMatrix(file_path)
 
 res = 0

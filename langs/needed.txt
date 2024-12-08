@@ -5,7 +5,6 @@ Haskell
 Lisp
 Perl
 Elixir
-Lua
 OCaml
 Python
 Cuda

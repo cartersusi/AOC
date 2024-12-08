@@ -32,7 +32,7 @@ end
 
 
 safe::Int64 = 0
-open("input") do f
+open("data/input") do f
     n::Int64 = 0
 
     while ! eof(f)
