@@ -1,14 +1,13 @@
-C#
 JavaScript
-TypeScript
 Haskell
 Lisp
 Perl
 Elixir
 OCaml
 Python
-Cuda
 Ruby
 C++
-PHP
 Erlang
+C#
+PHP
+Cuda

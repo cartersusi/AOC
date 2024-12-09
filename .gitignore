@@ -7,7 +7,7 @@ target/
 .vscode/
 settings.json
 
-# Generated swift files
+# swift
 .DS_Store
 .build/
 Packages/
@@ -16,3 +16,8 @@ DerivedData/
 .swiftpm/configuration/registries.json
 .swiftpm/xcode/package.xcworkspace/contents.xcworkspacedata
 .netrc
+
+# typescript
+node_modules/
+*.lockb
+*.json

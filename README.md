@@ -6,4 +6,5 @@
 4. Julia
 5. C
 6. Rust
-7. R
+7. Lua
+8. R

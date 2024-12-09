@@ -6,3 +6,4 @@ Rust
 Swift
 Zig
 Lua
+TypeScript
