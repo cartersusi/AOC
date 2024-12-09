@@ -1,6 +1,5 @@
 JavaScript
 Haskell
-Lisp
 Perl
 Elixir
 OCaml
@@ -8,6 +7,10 @@ Python
 Ruby
 C++
 Erlang
+<<<<<<< HEAD
 C#
 PHP
 Cuda
+=======
+Lisp
+>>>>>>> 1096945 (update)
