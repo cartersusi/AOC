@@ -65,12 +65,12 @@ func ValidPaths(matrix [][]int64, start_i, start_j int) int {
 	m := len(matrix)
 	n := len(matrix[0])
 
-	dirs := [][2]int{{-1, 0}, {1, 0}, {0, -1}, {0, 1}}
+	directions := [][2]int{{-1, 0}, {1, 0}, {0, -1}, {0, 1}}
 
 	memo := make(map[mem]int)
 
-	var dfs func(i, j, d int) int
-	dfs = func(i, j, d int) int {
+	var lfn func(i, j, d int) int
+	lfn = func(i, j, d int) int {
 		if d == HIGH {
 			return 1
 		}
@@ -80,24 +80,24 @@ func ValidPaths(matrix [][]int64, start_i, start_j int) int {
 			return val
 		}
 
-		next_digit := d + 1
-		ways := 0
-		for _, dir := range dirs {
-			ni := i + dir[0]
-			nj := j + dir[1]
+		next := d + 1
+		valid := 0
+		for _, direction := range directions {
+			ni := i + direction[0]
+			nj := j + direction[1]
 			if ni < 0 || ni >= m || nj < 0 || nj >= n {
 				continue
 			}
-			if int(matrix[ni][nj]) == next_digit {
-				ways += dfs(ni, nj, next_digit)
+			if int(matrix[ni][nj]) == next {
+				valid += lfn(ni, nj, next)
 			}
 		}
 
-		memo[key] = ways
-		return ways
+		memo[key] = valid
+		return valid
 	}
 
-	return dfs(start_i, start_j, 0)
+	return lfn(start_i, start_j, 0)
 }
 
 func main() {
