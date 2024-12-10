@@ -7,10 +7,6 @@ Python
 Ruby
 C++
 Erlang
-<<<<<<< HEAD
-C#
 PHP
-Cuda
-=======
+C#
 Lisp
->>>>>>> 1096945 (update)
