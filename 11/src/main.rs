@@ -1,5 +1,7 @@
+use lru::LruCache;
 use std::fs::File;
 use std::io::{BufRead, BufReader};
+use std::num::NonZeroUsize;
 
 const FILE_PATH: &str = "data/input";
 const BLINKS: usize = 75;
@@ -20,40 +22,45 @@ fn input() -> Vec<u64> {
         .collect::<Vec<u64>>()
 }
 
-fn blink(stones: &[u64]) -> Vec<u64> {
-    let mut ret = Vec::with_capacity(stones.len() * 2);
-    for &stone in stones {
-        if stone == 0 {
-            ret.push(1);
-        } else {
-            let mut len = 0;
-            let mut temp = stone;
-            while temp > 0 {
-                len += 1;
-                temp /= 10;
-            }
-            if len % 2 == 0 {
-                let divisor = 10_u64.pow((len / 2) as u32);
-                let left = stone / divisor;
-                let right = stone % divisor;
-                ret.push(left);
-                ret.push(right);
-            } else {
-                ret.push(stone * YEAR);
-            }
+fn blink(stones: &[u64]) -> usize {
+    let mut res = 0;
+    let mut cache = LruCache::new(NonZeroUsize::new(2048 << 5).unwrap());
+
+    fn lfn(x: u64, i: usize, lru: &mut LruCache<(u64, usize), usize>) -> usize {
+        if let Some(&val) = lru.get(&(x, i)) {
+            return val;
         }
+
+        let val = if i == BLINKS {
+            1
+        } else if x == 0 {
+            lfn(1, i + 1, lru)
+        } else {
+            let s = x.to_string();
+            let l = s.len();
+            if l % 2 == 0 {
+                let left = s[..l / 2].parse::<u64>().unwrap();
+                let right = s[l / 2..].parse::<u64>().unwrap();
+                lfn(left, i + 1, lru) + lfn(right, i + 1, lru)
+            } else {
+                lfn(x * YEAR, i + 1, lru)
+            }
+        };
+
+        lru.put((x, i), val);
+        val
     }
-    ret
+
+    for &stone in stones {
+        res += lfn(stone, 0, &mut cache);
+    }
+    res
 }
 
 fn main() {
-    let mut stones = input();
+    let stones = input();
     println!("{:?}", stones);
 
-    for i in 0..BLINKS {
-        println!("Blink {}", i);
-        stones = blink(&stones);
-    }
-
-    println!("After {} blinks: {:?} stones", BLINKS, stones.len());
+    let res = blink(&stones);
+    println!("After {} blinks: {:?} stones", BLINKS, res);
 }
