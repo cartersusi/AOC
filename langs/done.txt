@@ -7,4 +7,3 @@ Swift
 Zig
 Lua
 TypeScript
-Cuda
