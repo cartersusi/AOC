@@ -1,9 +1,10 @@
 use std::fs::File;
+use std::fmt::Display;
 use std::io::{self, BufReader, BufRead};
 use std::path::Path;
 use std::collections::{HashSet, VecDeque};
 
-const FILE_PATH: &str = "data/input";
+const FILE_PATH: &str = "data/example";
 
 fn file2matrix(fpath: &str) -> io::Result<Vec<Vec<char>>> {
     if !Path::new(fpath).exists() {
@@ -22,6 +23,24 @@ fn file2matrix(fpath: &str) -> io::Result<Vec<Vec<char>>> {
     Ok(matrix)
 }
 
+trait PrintMatrix {
+    fn print(&self);
+}
+
+impl<T: Display> PrintMatrix for Vec<Vec<T>> {
+    fn print(&self) {
+        print!("[\n");
+        for row in self.iter() {
+            print!("  [ ");
+            for c in row.iter() {
+                print!("{} ", c);
+            }
+            print!("],\n");
+        }
+        print!("]\n");
+    }
+}
+
 struct Garden {
     state: Vec<Vec<char>>,
     unique: HashSet<char>,
@@ -36,63 +55,27 @@ impl Garden {
             unique: unique_chars,
         }
     }
-}
 
-trait PrintMatrix {
-    fn print(&self);
-}
-
-impl PrintMatrix for Vec<Vec<char>> {
-    fn print(&self) {
-        print!("[\n");
-        for row in self.iter() {
-            print!("  [ ");
-            for c in row.iter() {
-                print!("{} ", c);
-            }
-            print!("],\n");
-        }
-        print!("]\n");
+    fn mask(&self, value: char) -> Vec<Vec<char>> {
+        self.state.iter().map(|row| {
+            row.iter().map(|&c| if c == value { '#' } else { '.' }).collect()
+        }).collect()
     }
 }
 
-trait PrintBoolMatrix {
-    fn print(&self);
-}
-
-impl PrintBoolMatrix for Vec<Vec<bool>> {
-    fn print(&self) {
-        print!("[\n");
-        for row in self.iter() {
-            print!("  [ ");
-            for c in row.iter() {
-                print!("{} ", if *c { 1 } else { 0 });
-            }
-            print!("],\n");
-        }
-        print!("]\n");
-    }
-}
-
-fn mask(matrix: &Vec<Vec<char>>, value: char) -> Vec<Vec<char>> {
-    matrix.iter().map(|row| {
-        row.iter().map(|&c| if c == value { '#' } else { '.' }).collect()
-    }).collect()
-}
-
-fn perimeter(masked: &Vec<Vec<bool>>) -> usize {
-    let rows = masked.len();
-    let cols = if rows > 0 { masked[0].len() } else { 0 };
+fn perimeter(mask: &Vec<Vec<bool>>) -> usize {
+    let rows = mask.len();
+    let cols = if rows > 0 { mask[0].len() } else { 0 };
 
     let mut perimeter = 0;
     for r in 0..rows {
         for c in 0..cols {
-            if masked[r][c] {
+            if mask[r][c] {
                 let directions = [(1,0),(-1,0),(0,1),(0,-1)];
                 for (dx, dy) in directions.iter() {
                     let nx = (r as isize + dx) as usize;
                     let ny = (c as isize + dy) as usize;
-                    if nx >= rows || ny >= cols || !masked[nx][ny] {
+                    if nx >= rows || ny >= cols || !mask[nx][ny] {
                         perimeter += 1;
                     }
                 }
@@ -103,18 +86,16 @@ fn perimeter(masked: &Vec<Vec<bool>>) -> usize {
     perimeter
 }
 
-fn sections(masked: &Vec<Vec<char>>) -> usize {
+fn fences(mask: Vec<Vec<char>>) -> usize {
     let mut res = 0;
-    let rows = masked.len();
-    let cols = if rows > 0 { masked[0].len() } else { 0 };
+    let rows = mask.len();
+    let cols = if rows > 0 { mask[0].len() } else { 0 };
 
     let mut visited = vec![vec![false; cols]; rows];
-    let mut section_count = 0;
 
     for r in 0..rows {
         for c in 0..cols {
-            if masked[r][c] == '#' && !visited[r][c] {
-                section_count += 1;
+            if mask[r][c] == '#' && !visited[r][c] {
                 let mut tmp = vec![vec![false; cols]; rows];
                 
                 let mut queue = VecDeque::new();
@@ -127,7 +108,7 @@ fn sections(masked: &Vec<Vec<char>>) -> usize {
                     for (dx, dy) in directions.iter() {
                         let nx = (cx as isize + dx) as usize;
                         let ny = (cy as isize + dy) as usize;
-                        if nx < rows && ny < cols && masked[nx][ny] == '#' && !visited[nx][ny] {
+                        if nx < rows && ny < cols && mask[nx][ny] == '#' && !visited[nx][ny] {
                             visited[nx][ny] = true;
                             tmp[nx][ny] = true;
                             queue.push_back((nx, ny));
@@ -135,8 +116,6 @@ fn sections(masked: &Vec<Vec<char>>) -> usize {
                     }
                 }
 
-                //println!("Section {}: ", section_count);
-                //tmp.print();
                 let perimeter = perimeter(&tmp);
                 let count = tmp.iter().flatten().filter(|&&v| v).count();
                 res += count * perimeter;
@@ -149,16 +128,12 @@ fn sections(masked: &Vec<Vec<char>>) -> usize {
 
 fn main() {
     let g = Garden::new(FILE_PATH);
-    //g.state.print();
-    //println!("{:?}", g.unique);
+    g.state.print();
 
     
     let mut res = 0;
     for unique in g.unique.iter() {
-        //println!("Masking: {}", unique);
-        let masked = mask(&g.state, *unique);
-        res += sections(&masked);
-        //println!("\n----------------------------------\n");
+        res += fences(g.mask(*unique));
     }
 
     println!("Result: {}", res);
