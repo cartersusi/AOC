@@ -4,7 +4,7 @@ use std::io::{self, BufReader, BufRead};
 use std::path::Path;
 use std::collections::{HashSet, VecDeque};
 
-const FILE_PATH: &str = "data/example";
+const FILE_PATH: &str = "data/input";
 
 fn file2matrix(fpath: &str) -> io::Result<Vec<Vec<char>>> {
     if !Path::new(fpath).exists() {
